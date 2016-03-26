@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.Entity;
+using MyKbb.Master.DataAccess.Models;
 
-namespace MyKbb.Master.Models
+namespace MyKbb.Master.DataAccess
 {
     public class KbbContext: DbContext
     {

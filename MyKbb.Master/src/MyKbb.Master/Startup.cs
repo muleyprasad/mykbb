@@ -7,8 +7,9 @@ using Microsoft.AspNet.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using MyKbb.Master.Models;
+using MyKbb.Master.DataAccess;
 using Microsoft.Data.Entity;
+using MyKbb.Master.Services;
 
 namespace MyKbb.Master
 {
@@ -32,6 +33,8 @@ namespace MyKbb.Master
             services.AddEntityFramework()
                 .AddInMemoryDatabase()
                 .AddDbContext<KbbContext>(options => options.UseInMemoryDatabase());
+
+            services.AddSingleton<IInventoryService, InventoryService>();
 
             services.AddMvc();
         }

@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
+using MyKbb.Master.DataAccess;
 
 namespace MyKbb.Master.Controllers
 {
     public class HomeController : Controller
     {
+
         public IActionResult Index()
         {
+            
             return View();
         }
 
