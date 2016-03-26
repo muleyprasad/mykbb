@@ -20,7 +20,7 @@
     public class Car
     {
         public int Id { get; set; }
-        public string Manufacturer { get; set; }
+        public string manufacturer { get; set; }
         public int Year { get; set; }
         public string Model { get; set; }
         public BodyStyle Body { get; set; }

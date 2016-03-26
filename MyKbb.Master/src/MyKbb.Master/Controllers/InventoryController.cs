@@ -20,33 +20,42 @@ namespace MyKbb.Master.Controllers
             _inventoryService = inventoryService;
         }
         // GET: /<controller>/
-        public IActionResult Index(string pageId)
+        public IActionResult Index(string pageId, string manufacturer,string years)
         {
-            var viewModel = BuildViewModel(pageId);
+            var viewModel = BuildViewModel(pageId, manufacturer, years);
             return View(viewModel);
         }
 
-        private object BuildViewModel(string pageId)
+        private object BuildViewModel(string pageId, string manufacturer, string years)
         {
             var viewModel = new InventoryViewModel();
-            var pageModel = new PaginationViewModel();
-
+            
+            var filteredCars = _inventoryService.GetCars(manufacturer, years);
             //build pagination model
-            pageModel.PageUrl = "~/inventory/";
-            pageModel.TotalPageCount = _inventoryService.TotalCarCount() / pageSize;
-            pageModel.CurrentPageId = string.IsNullOrEmpty(pageId) ? 0 : Convert.ToInt16(pageId);
-            //build inventory list view model
-            viewModel.Cars = _inventoryService.GetCars(pageNum: pageModel.CurrentPageId, pageSize: pageSize);
-            viewModel.Page = pageModel;
+            viewModel.Page = GetPageModel(pageId, manufacturer, years);
+
+            //take current page rows from filtered cars list
+            viewModel.Cars = filteredCars.Skip(viewModel.Page.CurrentPageId * pageSize).Take(pageSize).ToList();
+            
             //get distinct manufacturers and their count for current resultset
-            viewModel.ManufacturerFacet = viewModel.Cars.GroupBy((item => item.Manufacturer),
+            viewModel.manufacturerFacet = filteredCars.GroupBy((item => item.manufacturer),
              (key, elements) => new KeyValuePair<string,string>(key, elements.Distinct().Count().ToString()));
+            
             //get distinct years and their count for current resultset
-            viewModel.YearFacet = viewModel.Cars.GroupBy((item => item.Year),
+            viewModel.YearFacet = filteredCars.GroupBy((item => item.Year),
                          (key, elements) => new KeyValuePair<string, string>(key.ToString(), elements.Distinct().Count().ToString()));
 
             return viewModel;
         }
 
+        private PaginationViewModel GetPageModel(string pageId, string manufacturer, string years)
+        {
+            var pageModel = new PaginationViewModel();
+            pageModel.PageUrl = "~/inventory/";
+            pageModel.TotalPageCount = _inventoryService.TotalCarCount(manufacturer, years) / pageSize;
+            pageModel.CurrentPageId = string.IsNullOrEmpty(pageId) ? 0 : Convert.ToInt16(pageId);
+
+            return pageModel;
+        }
     }
 }

@@ -9,8 +9,8 @@ namespace MyKbb.Master.Services
 {
     public interface IInventoryService
     {
-        int TotalCarCount();
-        IList<Car> GetCars(int pageNum = 0, int pageSize = 2, string manufacuters = "", string years = "");
+        int TotalCarCount(string manufacturer = "", string years = "");
+        IList<Car> GetCars(string manufacturer = "", string years = "");
     }
 
     public class InventoryService : IInventoryService
@@ -23,23 +23,56 @@ namespace MyKbb.Master.Services
             BuildDummyData();
         }
 
-        public int TotalCarCount()
+        public int TotalCarCount(string manufacturer = "", string years = "")
         {
-            return _kbbContext.Cars.ToList().Count;
+            return GetQuery(manufacturer, years).ToList().Count;
         }
 
-        public IList<Car> GetCars(int pageNum = 0, int pageSize = 2, string manufacuters = "", string years = "")
+        public IList<Car> GetCars(string manufacturer = "", string years = "")
         {
+            //ToDo: refactor to construct lambda based on params
 
-            return _kbbContext.Cars.OrderBy(c=>c.Id).Skip(pageNum * pageSize).Take(pageSize).ToList();
+            return GetQuery(manufacturer, years).ToList();
         }
 
+        private IQueryable<Car> GetQuery(string manufacturer = "", string years = "")
+        {
+            //ToDo: refactor to construct lambda based on params
+
+            string[] manu;
+            string[] yer;
+
+            if (string.IsNullOrEmpty(manufacturer) && string.IsNullOrEmpty(years))
+            {
+                return _kbbContext.Cars.OrderBy(c => c.Id);
+            }
+            else if (!string.IsNullOrEmpty(manufacturer))
+            {
+                manu = manufacturer.Split(',');
+                return _kbbContext.Cars.Where(c => manu.Contains(c.manufacturer))
+                .OrderBy(c => c.Id);
+            }
+            else if (!string.IsNullOrEmpty(years))
+            {
+                yer = years.Split(',');
+                return _kbbContext.Cars.Where(c => yer.Contains(c.Year.ToString()))
+                .OrderBy(c => c.Id);
+            }
+            else if (!string.IsNullOrEmpty(manufacturer) && !string.IsNullOrEmpty(years))
+            {
+                manu = manufacturer.Split(',');
+                yer = years.Split(',');
+                return _kbbContext.Cars.Where(c => manu.Contains(c.manufacturer) && yer.Contains(c.Year.ToString()))
+                .OrderBy(c => c.Id);
+            }
+            return null;
+        }
         private void BuildDummyData()
         {
             _kbbContext.Cars.Add(new Car
             {
                 Id = 1,
-                Manufacturer = "GM",
+                manufacturer = "Toyota",
                 Year = 2000,
                 Model = "Model101",
                 Body = BodyStyle.Coupe,
@@ -53,7 +86,7 @@ namespace MyKbb.Master.Services
             _kbbContext.Cars.Add(new Car
             {
                 Id = 2,
-                Manufacturer = "Toyota",
+                manufacturer = "Toyota",
                 Year = 2010,
                 Model = "Model102",
                 Body = BodyStyle.Truck,
@@ -67,7 +100,7 @@ namespace MyKbb.Master.Services
             _kbbContext.Cars.Add(new Car
             {
                 Id = 3,
-                Manufacturer = "Nissan",
+                manufacturer = "Nissan",
                 Year = 2012,
                 Model = "Model103",
                 Body = BodyStyle.Van,
@@ -81,7 +114,7 @@ namespace MyKbb.Master.Services
             _kbbContext.Cars.Add(new Car
             {
                 Id = 4,
-                Manufacturer = "Ford",
+                manufacturer = "Ford",
                 Year = 2012,
                 Model = "Model104",
                 Body = BodyStyle.Coupe,
@@ -95,7 +128,7 @@ namespace MyKbb.Master.Services
             _kbbContext.Cars.Add(new Car
             {
                 Id = 5,
-                Manufacturer = "GM",
+                manufacturer = "Toyota",
                 Year = 2000,
                 Model = "Model105",
                 Body = BodyStyle.Coupe,
@@ -109,7 +142,7 @@ namespace MyKbb.Master.Services
             _kbbContext.Cars.Add(new Car
             {
                 Id = 6,
-                Manufacturer = "Toyota",
+                manufacturer = "Toyota",
                 Year = 2010,
                 Model = "Model106",
                 Body = BodyStyle.Truck,
@@ -123,7 +156,7 @@ namespace MyKbb.Master.Services
             _kbbContext.Cars.Add(new Car
             {
                 Id = 7,
-                Manufacturer = "Nissan",
+                manufacturer = "Nissan",
                 Year = 2012,
                 Model = "Model107",
                 Body = BodyStyle.Van,
@@ -137,7 +170,7 @@ namespace MyKbb.Master.Services
             _kbbContext.Cars.Add(new Car
             {
                 Id = 8,
-                Manufacturer = "Ford",
+                manufacturer = "Ford",
                 Year = 2012,
                 Model = "Model108",
                 Body = BodyStyle.Coupe,

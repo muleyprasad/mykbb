@@ -22,9 +22,9 @@
                     Manufacturer
                 </div>
                 <div class="panel-body">
-                    @foreach (var item in Model.ManufacturerFacet)
+                    @foreach (var item in Model.manufacturerFacet)
                     {
-                        <input type="checkbox" id="@item.Key" name="@item.Key" value="Bike"> @(String.Format("{0} ({1})", item.Key, item.Value)) <br> 
+                        <input type="checkbox" class="manu"  id="@item.Key" value="@item.Key"> @(String.Format("{0} ({1})", item.Key, item.Value)) <br> 
                     }
                 </div>
             </div>
@@ -35,10 +35,15 @@
                 <div class="panel-body">
                     @foreach (var item in Model.YearFacet)
                     {
-                        <input type="checkbox" id="@item.Key" name="@item.Key" value="Bike"> @(String.Format("{0} ({1})", item.Key, item.Value)) <br>
+                        <input type="checkbox" class="year" id="@item.Key" name="@item.Key"> @(String.Format("{0} ({1})", item.Key, item.Value)) <br>
                     }
                 </div>
             </div>
+            <div>
+                <input type="button" id="applyFilter" value="Apply Filter" />
+                <a href="javascript:void(0);" id="clearFilter">Clear</a>
+            </div>
+
         </div>
     </div>
     <div class="col-md-9">
@@ -47,3 +52,31 @@
         </div>
     </div>
 </div>
+
+@section scripts {
+<script type="text/javascript">
+    $("#clearFilter").click(function () {
+        $(".manu:checked").prop('checked', false);
+        $(".year:checked").prop('checked', false);
+
+    });
+    $("#applyFilter").click(function () {
+        if ($('.manu:checked').length || $('.year:checked').length) {
+            var manufacturers ='',
+                years ='';
+            $('.manu:checked').each(function () {
+                manufacturers += ","+ this.id;
+            });
+            $('.year:checked').each(function () {
+                years += "," + this.id;
+            });
+            manufacturers = manufacturers.slice(1);
+            years = years.slice(1);
+            window.location.href = '/inventory/?manufacturer=' + manufacturers + '&years=' + years;
+        } else {
+            alert("Please select at least one filter to proceed.");
+        }
+
+    })
+</script>
+}
