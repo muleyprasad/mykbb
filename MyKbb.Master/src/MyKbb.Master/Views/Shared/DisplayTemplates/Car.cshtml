@@ -1,0 +1,43 @@
+﻿@model MyKbb.Master.DataAccess.Models.Car
+
+<div class="panel panel-default">
+    <div class="panel-body row" style="background-color:#f5f5f5;">
+        <div class="col-md-2 text-center">
+            <p>$ @Model.Price</p>
+        </div>
+        <div class="col-md-3">
+            <img src="~/uploads/@Model.ThumbNail" height="150" width="150" />
+        </div>
+        <div class="col-md-7">
+            <div><h3>@Model.Model</h3></div>
+            <br />
+            <div class="row">
+                <div class="col-md-5">
+                    <div><b>Manufacturer</b> @Model.Manufacturer</div>
+                    <div><b>Transmission</b> @Model.Transmission</div>
+                </div>
+                <div class="col-md-3">
+                    <div><b>Body</b> @Model.Body</div>
+                    <div><b>Engine</b> @Model.Engine</div>
+                </div>
+                <div class="col-md-4">
+                    <div><b>Ext.Color</b> @Model.ExteriorColor</div>
+                    <div><b>Year</b> @Model.Year</div>
+                </div>
+            </div>
+            <div class="row">
+                <p>
+                    @if (Model.Body == MyKbb.Master.DataAccess.Models.BodyStyle.Truck)
+                    {
+
+                    }
+                    @if (Model.Body == MyKbb.Master.DataAccess.Models.BodyStyle.Van)
+                    {
+                        /**/
+                    }
+                </p>
+
+            </div>
+        </div>
+    </div>
+</div>

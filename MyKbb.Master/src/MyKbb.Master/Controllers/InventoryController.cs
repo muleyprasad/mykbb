@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using MyKbb.Master.DataAccess;
 using MyKbb.Master.Services;
+using MyKbb.Master.Models;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,7 +22,9 @@ namespace MyKbb.Master.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            return View();
+            var viewModel = new InventoryViewModel();
+            viewModel.Cars = _inventoryService.GetCars();
+            return View(viewModel);
         }
     }
 }

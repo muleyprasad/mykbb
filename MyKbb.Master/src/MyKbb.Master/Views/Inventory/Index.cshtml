@@ -1,8 +1,40 @@
-﻿@{
+﻿@model MyKbb.Master.Models.InventoryViewModel
+
+@{
     ViewData["Title"] = "Cars Inventory";
 }
 <div class="row">
     <div class="col-md-3">
         <h2>Cars Inventory</h2>
+    </div>
+</div>
+
+<div class="container">
+    <div class="col-md-2" style="margin-right: 5px;">
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Manufacturer
+                </div>
+                <div class="panel-body">
+                    <input type="checkbox" />
+                    <input type="checkbox" />
+                    <input type="checkbox" />
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Year
+                </div>
+                <div class="panel-body">
+                    <input type="checkbox" />
+                    <input type="checkbox" />
+                    <input type="checkbox" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        @Html.DisplayFor(m => m.Cars)
     </div>
 </div>
