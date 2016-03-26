@@ -22,19 +22,24 @@ namespace MyKbb.Master.Controllers
         // GET: /<controller>/
         public IActionResult Index(string pageId)
         {
-            var viewModel = new InventoryViewModel();
-            viewModel.TotalPages = _inventoryService.TotalCarCount() / pageSize;
-            viewModel.CurrentPageId = string.IsNullOrEmpty(pageId) ? 0: Convert.ToInt16(pageId);
-            viewModel.Cars = _inventoryService.GetCars(pageNum: viewModel.CurrentPageId, pageSize: pageSize);
+            var viewModel = BuildViewModel(pageId);
             return View(viewModel);
         }
 
-        [HttpPost]
-        public IActionResult Index(InventoryViewModel model)
+        private object BuildViewModel(string pageId)
         {
             var viewModel = new InventoryViewModel();
-            viewModel.Cars = _inventoryService.GetCars();
-            return View(viewModel);
+            var pageModel = new PaginationViewModel();
+
+            pageModel.PageUrl = "~/inventory/";
+            pageModel.TotalPageCount = _inventoryService.TotalCarCount() / pageSize;
+            pageModel.CurrentPageId = string.IsNullOrEmpty(pageId) ? 0 : Convert.ToInt16(pageId);
+
+            viewModel.Cars = _inventoryService.GetCars(pageNum: pageModel.CurrentPageId, pageSize: pageSize);
+            viewModel.Page = pageModel;
+
+            return viewModel;
         }
+
     }
 }
