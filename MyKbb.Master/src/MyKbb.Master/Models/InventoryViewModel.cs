@@ -7,7 +7,7 @@ namespace MyKbb.Master.Models
     {
         public IList<Car> Cars { get; set; }
         public PaginationViewModel Page { get; set; }
-        public KeyValuePair<string,string> ManufacturerFacet { get; set; }
-        public KeyValuePair<string, string> YearFacet { get; set; }
+        public IEnumerable<KeyValuePair<string,string>> ManufacturerFacet { get; set; }
+        public IEnumerable<KeyValuePair<string, string>> YearFacet { get; set; }
     }
 }

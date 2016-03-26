@@ -31,12 +31,19 @@ namespace MyKbb.Master.Controllers
             var viewModel = new InventoryViewModel();
             var pageModel = new PaginationViewModel();
 
+            //build pagination model
             pageModel.PageUrl = "~/inventory/";
             pageModel.TotalPageCount = _inventoryService.TotalCarCount() / pageSize;
             pageModel.CurrentPageId = string.IsNullOrEmpty(pageId) ? 0 : Convert.ToInt16(pageId);
-
+            //build inventory list view model
             viewModel.Cars = _inventoryService.GetCars(pageNum: pageModel.CurrentPageId, pageSize: pageSize);
             viewModel.Page = pageModel;
+            //get distinct manufacturers and their count for current resultset
+            viewModel.ManufacturerFacet = viewModel.Cars.GroupBy((item => item.Manufacturer),
+             (key, elements) => new KeyValuePair<string,string>(key, elements.Distinct().Count().ToString()));
+            //get distinct years and their count for current resultset
+            viewModel.YearFacet = viewModel.Cars.GroupBy((item => item.Year),
+                         (key, elements) => new KeyValuePair<string, string>(key.ToString(), elements.Distinct().Count().ToString()));
 
             return viewModel;
         }

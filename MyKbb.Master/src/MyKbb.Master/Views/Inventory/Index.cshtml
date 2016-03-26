@@ -22,9 +22,10 @@
                     Manufacturer
                 </div>
                 <div class="panel-body">
-                    <input type="checkbox" />
-                    <input type="checkbox" />
-                    <input type="checkbox" />
+                    @foreach (var item in Model.ManufacturerFacet)
+                    {
+                        <input type="checkbox" id="@item.Key" name="@item.Key" value="Bike"> @(String.Format("{0} ({1})", item.Key, item.Value)) <br> 
+                    }
                 </div>
             </div>
             <div class="panel panel-default">
@@ -32,9 +33,10 @@
                     Year
                 </div>
                 <div class="panel-body">
-                    <input type="checkbox" />
-                    <input type="checkbox" />
-                    <input type="checkbox" />
+                    @foreach (var item in Model.YearFacet)
+                    {
+                        <input type="checkbox" id="@item.Key" name="@item.Key" value="Bike"> @(String.Format("{0} ({1})", item.Key, item.Value)) <br>
+                    }
                 </div>
             </div>
         </div>
