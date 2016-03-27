@@ -32,9 +32,11 @@ namespace MyKbb.Master.Controllers
             
             var filteredCars = _inventoryService.GetCars(manufacturer, years);
             //build pagination model
-            viewModel.Page = GetPageModel(pageId, manufacturer, years);
+            viewModel.Page = GetPageModel(pageId, filteredCars.Count, manufacturer, years);
 
             //take current page rows from filtered cars list
+            //better if paging is done while querying data, but tradeoff is you need to query DB second time
+            //to get details for filters
             viewModel.Cars = filteredCars.Skip(viewModel.Page.CurrentPageId * pageSize).Take(pageSize).ToList();
             
             //get distinct manufacturers and their count for current resultset
@@ -48,11 +50,12 @@ namespace MyKbb.Master.Controllers
             return viewModel;
         }
 
-        private PaginationViewModel GetPageModel(string pageId, string manufacturer, string years)
+        private PaginationViewModel GetPageModel(string pageId, int totalCarCount, string manufacturer, string years)
         {
             var pageModel = new PaginationViewModel();
-            pageModel.PageUrl = "~/inventory/";
-            pageModel.TotalPageCount = _inventoryService.TotalCarCount(manufacturer, years) / pageSize;
+            pageModel.PageUrl = "~/inventory/" + 
+                ((!string.IsNullOrEmpty(manufacturer) || !string.IsNullOrEmpty(years)) ? "?manufacturer=" + manufacturer + "&years=" + years : "");
+            pageModel.TotalPageCount = totalCarCount / pageSize;
             pageModel.CurrentPageId = string.IsNullOrEmpty(pageId) ? 0 : Convert.ToInt16(pageId);
 
             return pageModel;

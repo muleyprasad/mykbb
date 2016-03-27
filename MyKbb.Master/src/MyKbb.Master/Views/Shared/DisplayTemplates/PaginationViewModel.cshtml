@@ -1,19 +1,21 @@
 ﻿@model MyKbb.Master.Models.PaginationViewModel
-
+@{ 
+    var urlStr = Model.PageUrl + ( Model.PageUrl.Contains('?') ? "&" : "?") + "pageId=";
+}
 <div class="pull-right pagination">
     <ul class="pagination">
-        <li class="page-pre"><a href="@Model.PageUrl?pageId=@( Model.CurrentPageId > 0 ? Model.CurrentPageId - 1 : 0 )">‹</a></li>
+        <li class="page-pre"><a href="@urlStr@( Model.CurrentPageId > 0 ? Model.CurrentPageId - 1 : 0 )">‹</a></li>
         @for (int i = 0; i < Model.TotalPageCount; i++)
         {
             if (Model.CurrentPageId == i)
             {
-                <li class="page-number active"><a href="@Model.PageUrl?pageId=@i">@(i + 1)</a></li>
+                <li class="page-number active"><a href="@urlStr@i">@(i + 1)</a></li>
             }
             else
             {
-                <li class="page-number"><a href="@Model.PageUrl?pageId=@i">@(i + 1)</a></li>
+                <li class="page-number"><a href="@urlStr@i">@(i + 1)</a></li>
             }
         }
-        <li class="page-next"><a href="@Model.PageUrl?pageId=@( Model.CurrentPageId <Model.TotalPageCount -1 ? Model.CurrentPageId +1 : Model.TotalPageCount - 1 )">›</a></li>
+        <li class="page-next"><a href="@urlStr@( Model.CurrentPageId <Model.TotalPageCount -1 ? Model.CurrentPageId +1 : Model.TotalPageCount - 1 )">›</a></li>
     </ul>
 </div>
